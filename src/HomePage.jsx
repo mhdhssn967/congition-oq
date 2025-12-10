@@ -1,26 +1,25 @@
-// HomePage.jsx and GamesPanel.jsx combined for convenience
-// You can split them into separate files later.
 import React, { useEffect, useState } from "react";
 import GamesPanel from "./components/GamesPanel";
 import { fetchNeuroRehabGames } from "./services/firebaseFunctions";
-
-
+import Login from "./Login";
 
 export default function HomePage() {
+  const [games, setGames] = useState([]);
+  const [user, setUser] = useState(null);
 
-    const [games,setGames]=useState([])
-    console.log(games);
-    
+  useEffect(() => {
+    if (!user) return;
 
-useEffect(() => {
-  async function loadGames() {
-    const data = await fetchNeuroRehabGames();
-    console.log(data);
-    setGames(data);
+    const loadGames = async () => {
+      const data = await fetchNeuroRehabGames();
+      setGames(data);
+    };
+    loadGames();
+  }, [user]);
+
+  if (!user) {
+    return <Login onLoginSuccess={(user) => setUser(user)} />;
   }
-
-  loadGames();
-}, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 flex flex-col items-center p-6">
@@ -34,7 +33,7 @@ useEffect(() => {
       </header>
 
       <div className="w-full max-w-3xl">
-        <GamesPanel games={games}/>
+        <GamesPanel games={games} deviceId="YOUR_DEVICE_ID" user={user} />
       </div>
     </div>
   );
