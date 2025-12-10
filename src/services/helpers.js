@@ -46,6 +46,28 @@ export const setSceneToActivitySelection = async (hospitalId, deviceId) => {
   }
 };
 
+export const updateSessionGameInfo = async (hospitalId, deviceId, gameName, sceneName, gameSetName) => {
+  try {
+    if (!hospitalId || !deviceId || !gameName || !sceneName) {
+      throw new Error("Missing required parameters to update session.");
+    }
+
+    const sessionRef = doc(db, 'hospitalData', hospitalId, 'activeDeviceSessions', deviceId);
+
+    await updateDoc(sessionRef, {
+      gameName: gameName,
+      SceneName: sceneName,
+      changeScene:true,
+      gameSetName:gameSetName,
+      startedAt: serverTimestamp(),
+    });
+
+    console.log(`Session updated with game "${gameName}" and scene "${sceneName}".`);
+  } catch (error) {
+    console.error("Error updating session game info:", error.message);
+  }
+};
+
 export const updateGameStatus = async (hospitalId,deviceId, newStatus) => {
     try {
       if (!deviceId || !newStatus) {

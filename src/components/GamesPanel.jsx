@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Play, Home } from "lucide-react";
-import { setDeviceGame, updateGameStatus, setSceneToActivitySelection } from "../services/helpers";
+import { setDeviceGame, updateGameStatus, setSceneToActivitySelection, updateSessionGameInfo } from "../services/helpers";
 
 export default function GamesPanel({ games }) {
   const [selectedGame, setSelectedGame] = useState(null);
@@ -8,8 +8,10 @@ export default function GamesPanel({ games }) {
 const user={hospitalId:'zat8FJfXebeHeodvz2XtkvyBHxA2'}
 const deviceId='789101f3afbdb2a4e269e661a479d46d'
   // Select a game
-  const handleSelectGame = (game) => {
-    setSelectedGame(game);
+  const handleSelectGame = async(game) => {
+    setSelectedGame(game)
+    await updateSessionGameInfo(user.hospitalId,deviceId,game.gameDisplayName,game.gameName,game.gameSetName)
+    
   };
 
   // Play the selected game
