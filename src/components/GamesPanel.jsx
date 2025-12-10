@@ -2,16 +2,34 @@ import React, { useState } from "react";
 import { Play, Home } from "lucide-react";
 import { setDeviceGame, updateGameStatus, setSceneToActivitySelection, updateSessionGameInfo } from "../services/helpers";
 
+// Import images from public folder
+const gameImages = [
+  "/game1.jpg",
+  "/game2.jpg",
+  "/game3.jpg",
+  "/game4.jpg",
+  "/game5.jpg",
+  "/game6.jpg",
+  "/game7.jpg",
+];
+
 export default function GamesPanel({ games }) {
   const [selectedGame, setSelectedGame] = useState(null);
   const [loading, setLoading] = useState(false);
-const user={hospitalId:'zat8FJfXebeHeodvz2XtkvyBHxA2'}
-const deviceId='789101f3afbdb2a4e269e661a479d46d'
+
+  const user = { hospitalId: "zat8FJfXebeHeodvz2XtkvyBHxA2" };
+  const deviceId = "789101f3afbdb2a4e269e661a479d46d";
+
   // Select a game
-  const handleSelectGame = async(game) => {
-    setSelectedGame(game)
-    await updateSessionGameInfo(user.hospitalId,deviceId,game.gameDisplayName,game.gameName,game.gameSetName)
-    
+  const handleSelectGame = async (game) => {
+    setSelectedGame(game);
+    await updateSessionGameInfo(
+      user.hospitalId,
+      deviceId,
+      game.gameDisplayName,
+      game.gameName,
+      game.gameSetName
+    );
   };
 
   // Play the selected game
@@ -19,9 +37,13 @@ const deviceId='789101f3afbdb2a4e269e661a479d46d'
     if (!selectedGame) return;
     setLoading(true);
     try {
-      console.log(selectedGame);
-      
-      await setDeviceGame(user.hospitalId, deviceId, selectedGame.gameDisplayName,selectedGame.gameName,selectedGame.gameSetName);
+      await setDeviceGame(
+        user.hospitalId,
+        deviceId,
+        selectedGame.gameDisplayName,
+        selectedGame.gameName,
+        selectedGame.gameSetName
+      );
       await updateGameStatus(user.hospitalId, deviceId, "playing");
       console.log("✅ Game started:", selectedGame.gameName);
     } catch (err) {
@@ -48,9 +70,11 @@ const deviceId='789101f3afbdb2a4e269e661a479d46d'
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
         {games.length === 0 ? (
-          <p className="text-center text-blue-500 text-lg mt-10">Loading games...</p>
+          <p className="text-center text-blue-500 text-lg mt-10">
+            Loading games...
+          </p>
         ) : (
-          games.map((game) => (
+          games.map((game, index) => (
             <button
               key={game.id}
               onClick={() => handleSelectGame(game)}
@@ -61,7 +85,7 @@ const deviceId='789101f3afbdb2a4e269e661a479d46d'
               }`}
             >
               <img
-                src={game.imageUrl || "/placeholder-game.png"}
+                src={gameImages[index % gameImages.length]} // assign images in sequence
                 alt={game.gameDisplayName || game.gameName}
                 className="w-24 h-24 object-cover mb-2 rounded-lg"
               />

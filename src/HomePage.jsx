@@ -2,10 +2,27 @@ import React, { useEffect, useState } from "react";
 import GamesPanel from "./components/GamesPanel";
 import { fetchNeuroRehabGames } from "./services/firebaseFunctions";
 import Login from "./Login";
+import { auth } from "../firebaseConfig";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function HomePage() {
   const [games, setGames] = useState([]);
   const [user, setUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true); // waiting for auth state
+
+  useEffect(() => {
+    // Listen to auth state changes
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+      } else {
+        setUser(null);
+      }
+      setLoadingUser(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -16,6 +33,10 @@ export default function HomePage() {
     };
     loadGames();
   }, [user]);
+
+  if (loadingUser) {
+    return <p className="text-center mt-10 text-blue-500">Checking login status...</p>;
+  }
 
   if (!user) {
     return <Login onLoginSuccess={(user) => setUser(user)} />;
