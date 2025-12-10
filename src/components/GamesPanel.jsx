@@ -56,9 +56,11 @@ export default function GamesPanel({ games }) {
   // Go to home screen
   const handleGoHome = async () => {
     setLoading(true);
+
     try {
       await setSceneToActivitySelection(user.hospitalId, deviceId);
       console.log("🏠 Returned to home screen");
+      setSelectedGame(null)
     } catch (err) {
       console.error("❌ Failed to go home:", err);
     }
