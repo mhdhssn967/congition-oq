@@ -11,6 +11,7 @@ const gameImages = [
   "/game5.jpg",
   "/game6.jpg",
   "/game7.jpg",
+  "/game8.jpg",
 ];
 
 export default function GamesPanel({ games }) {
