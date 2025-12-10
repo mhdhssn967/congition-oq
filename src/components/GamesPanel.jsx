@@ -69,7 +69,7 @@ export default function GamesPanel({ games }) {
     <div className="flex flex-col items-center gap-6">
       <h2 className="text-2xl font-bold text-blue-700">Select a Game</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-5 w-full">
         {games.length === 0 ? (
           <p className="text-center text-blue-500 text-lg mt-10">
             Loading games...
